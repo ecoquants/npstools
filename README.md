@@ -8,3 +8,9 @@ National Park Service tools for R
 1. Use `devtools::create(path=".")` to initiate a package. You can say "no" when it asks you to overwrite the RProj file.
 
 For more, see https://github.com/isteves/r-pkg-intro.
+
+## Install package
+
+```r
+devtools::install_github("ecoquants/npstools")
+```
