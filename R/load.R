@@ -2,20 +2,27 @@
 #'
 #' @param nps_config configuration of paths, etc
 #' @param park park code (ie CHIS, CABR or SAMO)
+#' @param tbls character vector of tables to load (default=NULL, loads all tables)
 #' @param append_park whether to append park code to name (eg tbl_Species_CHIS)
 #'
 #' @return Does not return anything. Loads all tables listed in the nps_config$dir_tables/park folder into the global namespace.
 #' @export
 #'
 #' @examples
-read_park_tables <- function(nps_config, park, append_park=F){
+read_park_tables <- function(nps_config, park, tbls=NULL, append_park=F){
   #park <- "CABR"; append_park <- F
 
-  dir_csv <- file.path(nps_config$dir_tables, park)
-  csvs <- list.files(dir_csv, ".*\\.csv")
+  dir_csv  <- file.path(nps_config$dir_tables, park)
+  csvs     <- list.files(dir_csv, ".*\\.csv")
+  tbls_all <- path_ext_remove(csvs)
+  if (is.null(tbls))
+    tbls <- tbls_all
+  tbls_missing <- setdiff(tbls, tbls_all)
+  if (length(tbls_missing) > 0)
+    stop(glue("Table(s) not found in {dir_csv}: {paste(tbls_missing, collapse=', ')}"))
 
-  for (csv in csvs){ # csv <- csvs[1]
-    tbl <- path_ext_remove(csv)
+  for (tbl in tbls){ # csv <- csvs[1]
+    csv <- glue("{tbl}.csv")
     if (append_park)
       tbl <- glue("{tbl}_{park}")
 
@@ -36,6 +43,9 @@ read_park_tables <- function(nps_config, park, append_park=F){
 #'
 #' @examples
 get_spp_richness_plots <- function(park, year){
+
+  read_park_tables(tbls=c("tbl_Phenology_Species", "tlu_Richness"))
+
   tbl_Phenology_Species %>%
     select(Event_ID, Species_Code, starts_with("Plot")) %>%
     gather(plot_col, plot_val, -Event_ID, -Species_Code) %>%

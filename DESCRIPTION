@@ -1,10 +1,12 @@
 Package: npstools
-Title: What the Package Does (one line, title case)
-Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.4.4)
-License: What license is it under?
+Title: National Park Service Tools for R
+Version: 0.1
+Authors@R: person("Ben", "Best", email = "ben@ecoquants.com", role = c("aut", "cre"))
+Description: These helper functions are initially for use with the vegetation monitoring (https://github.com/ecoquants/nps-veg).
+Depends: R (>= 3.1)
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
+URL: https://ecoquants.github.io/npstools
+BugReports: https://github.com/ecoquants/npstools/issues

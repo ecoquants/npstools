@@ -4,12 +4,14 @@
 \alias{read_park_tables}
 \title{Read Park Tables}
 \usage{
-read_park_tables(nps_config, park, append_park = F)
+read_park_tables(nps_config, park, tbls = NULL, append_park = F)
 }
 \arguments{
 \item{nps_config}{configuration of paths, etc}
 
 \item{park}{park code (ie CHIS, CABR or SAMO)}
+
+\item{tbls}{character vector of tables to load (default=NULL, loads all tables)}
 
 \item{append_park}{whether to append park code to name (eg tbl_Species_CHIS)}
 }
