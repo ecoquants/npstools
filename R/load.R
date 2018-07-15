@@ -6,9 +6,19 @@
 #' @param append_park whether to append park code to name (eg tbl_Species_CHIS)
 #'
 #' @return Does not return anything. Loads all tables listed in the nps_config$dir_tables/park folder into the global namespace.
+#' @importFrom readr read_csv
+#' @importFrom glue glue
+#' @importFrom glue collapse
+#' @importFrom tidyr gather
+#' @importFrom stringr str_sub
+#' @importFrom lubridate year
+#'
 #' @export
 #'
 #' @examples
+#' nps_config <- read_yaml(here("data/nps_config.yaml"))
+#' load_park_tables(nps_config, "CINMS", tbls=c("tbl_Phenology_Species", "tlu_Richness"))
+#'
 load_park_tables <- function(nps_config, park, tbls=NULL, append_park=F){
   #park <- "CABR"; append_park <- F
 
@@ -24,8 +34,11 @@ load_park_tables <- function(nps_config, park, tbls=NULL, append_park=F){
   if (is.null(tbls))
     tbls <- tbls_park_all
   tbls_missing <- setdiff(tbls, c(tbls_park_all, tbls_shared_all))
-  if (length(tbls_missing) > 0)
-    stop(glue("Table(s) not found in {nps_config$dir_tables}/[{park}|shared]: {paste(tbls_missing, collapse=', ')}"))
+  #browser()
+  if (length(tbls_missing) > 0){
+    msg <- glue("Table(s) not found in {dir_tables}/[{park}|shared]: {collapse(tbls_missing, sep=', ')}")
+    stop(msg)
+  }
 
   for (tbl in tbls){ # csv <- csvs[1]
 
@@ -40,43 +53,41 @@ load_park_tables <- function(nps_config, park, tbls=NULL, append_park=F){
   }
 }
 
-get_dir_tables <- function(nps_config){
-  machine <- Sys.info()[["nodename"]]
-  machine_in_config <- ifelse(machine %in% names(nps_config$dir_tables_csv), T, F)
-
-  dir_tables <- case_when(
-    machine_in_config ~ nps_config$dir_tables_csv[[machine]],
-    TRUE ~ nps_config$dir_tables_csv$default)
-
-  dir_tables
-}
-
-
-
-#' Get species richness table by park and year
+#' Read NPS configuration file
 #'
-#' @param park not yet implemented
-#' @param year not yet implemented
+#' @param nps_config_yaml NPS configuration file in YAML format
 #'
-#' @return tibble
+#' @return list object from reading in the NPS configuration file
+#' @importFrom yaml read_yaml
 #' @export
 #'
 #' @examples
-get_spp_richness_table <- function(park, year){
+#' get_nps_config(here("data/nps_config.yaml"))
+get_nps_config <- function(nps_config_yaml){
+  read_yaml(nps_config_yaml)
+}
 
-  read_park_tables(tbls=c("tbl_Phenology_Species", "tlu_Richness"))
+#' Get directory of tables with CSV's for R
+#'
+#' @param nps_config NPS configuration list object
+#'
+#' @return path to directory of tables with CSV's for R. Evaluates the machine
+#'   name that my be inserted into the NPS configuration file, per: \code{Sys.info()[["nodename"]]}
+#' @export
+#'
+#' @examples
+#' nps_config <- read_yaml(here("data/nps_config.yaml"))
+#' get_dir_tables(nps_config)
+get_dir_tables <- function(nps_config){
+  machine <- Sys.info()[["nodename"]]
+  machine_in_config <- ifelse(machine %in% names(nps_config$dir_R_tables_csv), T, F)
+  dir_machine <- ifelse(machine_in_config, nps_config$dir_R_tables_csv[[machine]], "")
 
-  tbl_Phenology_Species %>%
-    select(Event_ID, Species_Code, starts_with("Plot")) %>%
-    gather(plot_col, plot_val, -Event_ID, -Species_Code) %>%
-    filter(plot_col != "Plot_7") %>%
-    left_join(
-      tlu_Richness,
-      by = c("plot_val"="Richness_code")) %>%
-    mutate(
-      plot_num    = str_sub(plot_col, 6,6),
-      plot_length = ifelse(nchar(plot_col) == 6, "5m", "1m")) %>%
-    group_by(Event_ID, Species_Code, plot_num) %>%
-    summarise(
-      present = max(Analysis_value))
+  #browser()
+  dir_tables <- case_when(
+    #machine_in_config ~ nps_config$dir_R_tables_csv[[machine]],
+    machine_in_config ~ dir_machine,
+    TRUE ~ nps_config$dir_R_tables_csv$default)
+
+  dir_tables
 }

@@ -10,3 +10,12 @@ LazyData: true
 RoxygenNote: 6.0.1
 URL: https://ecoquants.github.io/npstools
 BugReports: https://github.com/ecoquants/npstools/issues
+Imports: tidyverse,
+    openxlsx,
+    pivottabler,
+    leaflet,
+    here,
+    glue,
+    lubridate,
+    fs,
+    yaml

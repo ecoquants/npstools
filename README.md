@@ -50,3 +50,31 @@ To fix this, be sure that all arguments in your functions are given a definition
 devtools::document()
 pkgdown::build_site()
 ```
+
+### Package dependencies
+
+See: Dependencies in [Package basics · R packages](http://r-pkgs.had.co.nz/description.html#dependencies)
+http://r-pkgs.had.co.nz/description.html#dependencies
+
+```R
+devtools::use_package("tidyverse"  , type="Imports")
+devtools::use_package("lubridate"  , type="Imports")
+devtools::use_package("fs"         , type="Imports")
+devtools::use_package("here"       , type="Imports")
+devtools::use_package("glue"       , type="Imports")
+devtools::use_package("yaml"       , type="Imports")
+devtools::use_package("openxlsx"   , type="Imports")
+devtools::use_package("pivottabler", type="Imports")
+devtools::use_package("leaflet"    , type="Imports")
+```
+
+### Conversion from VB to SQL to R
+
+Copied Visual Basic (VB) modules in Access database to install folder `inst/accessdb_source/*.vb` for translating from strings to SQL into `inst/accessdb_source/*.sql` and indent for readability to then parse into dplyr functions for R (see cheat sheet [Data Transformation with dplyr](https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf)).
+
+Used three panes:
+
+1. VB: [Atom](https://atom.io/) editor with [language-vb](https://atom.io/packages/language-vb) package installed.
+1. SQL: RStudio
+1. R nps-veg: RStudio
+1. R npstools: RStudio
