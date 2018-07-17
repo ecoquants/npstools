@@ -68,9 +68,27 @@ devtools::use_package("pivottabler", type="Imports")
 devtools::use_package("leaflet"    , type="Imports")
 ```
 
+### Vignettes
+
+```R
+devtools::use_vignette("quick-start")
+devtools::document()
+pkgdown::build_site()
+```
+
+### Data
+
+```r
+# setup data-raw/ folder
+devtools::use_data_raw()
+
+# populate from local
+devtools::use_data(applicants, overwrite = TRUE)
+```
+
 ### Conversion from VB to SQL to R
 
-Copied Visual Basic (VB) modules in Access database to install folder `inst/accessdb_source/*.vb` for translating from strings to SQL into `inst/accessdb_source/*.sql` and indent for readability to then parse into dplyr functions for R (see cheat sheet [Data Transformation with dplyr](https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf)).
+Copied Visual Basic (VB) modules in Access database to install folder `inst/accessdb_source/*.vb` for translating from strings to pseudo-SQL into `inst/accessdb_source/*.sql` and indent for readability to then translate into dplyr functions for R (see cheat sheet [Data Transformation with dplyr](https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf)).
 
 Used three panes:
 
@@ -78,3 +96,4 @@ Used three panes:
 1. SQL: RStudio
 1. R nps-veg: RStudio
 1. R npstools: RStudio
+

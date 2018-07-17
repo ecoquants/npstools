@@ -19,3 +19,6 @@ Imports: tidyverse,
     lubridate,
     fs,
     yaml
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

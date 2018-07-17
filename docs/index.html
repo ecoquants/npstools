@@ -44,6 +44,18 @@
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/quick-start.html">Quick Start</a>
+    </li>
+  </ul>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
 </div>
@@ -107,6 +119,48 @@ Error in rep(TRUE, length(x) - 1) : invalid 'times' argument</code></pre>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/document">document</a></span>()</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">pkgdown<span class="op">::</span><span class="kw"><a href="http://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</a></code></pre></div>
 </div>
+</div>
+<div id="package-dependencies" class="section level3">
+<h3 class="hasAnchor">
+<a href="#package-dependencies" class="anchor"></a>Package dependencies</h3>
+<p>See: Dependencies in <a href="http://r-pkgs.had.co.nz/description.html#dependencies">Package basics · R packages</a> <a href="http://r-pkgs.had.co.nz/description.html#dependencies" class="uri">http://r-pkgs.had.co.nz/description.html#dependencies</a></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_package">use_package</a></span>(<span class="st">"tidyverse"</span>  , <span class="dt">type=</span><span class="st">"Imports"</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_package">use_package</a></span>(<span class="st">"lubridate"</span>  , <span class="dt">type=</span><span class="st">"Imports"</span>)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_package">use_package</a></span>(<span class="st">"fs"</span>         , <span class="dt">type=</span><span class="st">"Imports"</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_package">use_package</a></span>(<span class="st">"here"</span>       , <span class="dt">type=</span><span class="st">"Imports"</span>)</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_package">use_package</a></span>(<span class="st">"glue"</span>       , <span class="dt">type=</span><span class="st">"Imports"</span>)</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_package">use_package</a></span>(<span class="st">"yaml"</span>       , <span class="dt">type=</span><span class="st">"Imports"</span>)</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_package">use_package</a></span>(<span class="st">"openxlsx"</span>   , <span class="dt">type=</span><span class="st">"Imports"</span>)</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_package">use_package</a></span>(<span class="st">"pivottabler"</span>, <span class="dt">type=</span><span class="st">"Imports"</span>)</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_package">use_package</a></span>(<span class="st">"leaflet"</span>    , <span class="dt">type=</span><span class="st">"Imports"</span>)</a></code></pre></div>
+</div>
+<div id="vignettes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#vignettes" class="anchor"></a>Vignettes</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/infrastructure">use_vignette</a></span>(<span class="st">"quick-start"</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/document">document</a></span>()</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">pkgdown<span class="op">::</span><span class="kw"><a href="http://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</a></code></pre></div>
+</div>
+<div id="data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#data" class="anchor"></a>Data</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># setup data-raw/ folder</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_data_raw">use_data_raw</a></span>()</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co"># populate from local</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/use_data">use_data</a></span>(applicants, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+</div>
+<div id="conversion-from-vb-to-sql-to-r" class="section level3">
+<h3 class="hasAnchor">
+<a href="#conversion-from-vb-to-sql-to-r" class="anchor"></a>Conversion from VB to SQL to R</h3>
+<p>Copied Visual Basic (VB) modules in Access database to install folder <code>inst/accessdb_source/*.vb</code> for translating from strings to pseudo-SQL into <code>inst/accessdb_source/*.sql</code> and indent for readability to then translate into dplyr functions for R (see cheat sheet <a href="https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf">Data Transformation with dplyr</a>).</p>
+<p>Used three panes:</p>
+<ol>
+<li>VB: <a href="https://atom.io/">Atom</a> editor with <a href="https://atom.io/packages/language-vb">language-vb</a> package installed.</li>
+<li>SQL: RStudio</li>
+<li>R nps-veg: RStudio</li>
+<li>R npstools: RStudio</li>
+</ol>
 </div>
 </div>
 </div>

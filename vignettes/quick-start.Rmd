@@ -1,0 +1,102 @@
+---
+title: "Quick Start"
+author: "Ben Best"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quick Start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = TRUE, message=F, warning=F)
+```
+
+## Install `npstools` & Configure Path to Tables
+
+You only need to run this once, or again to update package.
+
+```{r, eval=F}
+library(devtools) # install.packages("devtools")
+
+devtools::install_github("ecoquants/npstools")
+```
+
+You'll need access to the databaes tables in comma-seperated value (CSV) format. If you don't have access to the shared drive where they're stored internally, you can use this copy:
+
+- [R_tables_csv.zip](https://drive.google.com/open?id=1NmJjejHnrhvCT-qmnoR-3XHkUTPs7x09)
+
+You'll then need to unzip the contents and create your own configuration file with this path, similar to:
+
+- [nps_config.yaml](https://github.com/ecoquants/npstools/blob/master/inst/nps_config.yaml)
+
+It is recommended that you setup this file in your home directory `"~/nps_config.yaml"` or an RStudio Project so you can reference it with `here::here("nps_config.yaml")`.
+
+## Setup: Load Libraries & Configuration, Set Park & Year
+
+```{r}
+# load libraries
+library(npstools)
+library(tidyverse)
+library(here)
+library(glue)
+
+# load configuration
+nps_config <- get_nps_config("~/github/nps-veg/data/nps_config.yaml")
+
+# specify park and year of interest
+park <- "CABR" # "CABR" | "CINMS" | "SABO"
+year <- 2015
+```
+
+## Get Tables
+
+### Table of Species Richness
+
+Table E.6. Species richness (per transect) observed in 20XX monitoring of [PARK] vegetation.
+
+```{r}
+# set optional path to Excel spreadsheet output
+#n_spp_xlsx <- here(glue("data/spp_richness_pivot_{park}_{year}.xlsx"))
+
+# get species richness pivot table
+n_spp_tbl <- get_n_spp_pivtbl(park, year) # , xlsx=n_spp_xlsx)
+
+# render pivot table as html widget
+n_spp_tbl$renderPivot()
+```
+
+### Table of Percent Cover
+
+Table of data for...
+
+Figure E.2. Absolute foliar cover (%) of plant growth forms, as observed during 20XX monitoring at CABR. Colored bars show mean values, while error bars extend ±1 s.d. from the means.
+
+#### Render Interactive Table
+
+```{r}
+# get percent cover
+pct_cover_tbl <- get_pct_cover_tbl(park, year)
+
+# render interactive table, without Query_type column
+pct_cover_tbl %>% 
+  select(-Query_type) %>%
+  DT::datatable() %>%
+  DT::formatRound(columns=c("Average", "StdDev"), digits=3)
+```
+
+#### Render Static Table
+
+```{r}
+# render static table, for first 10 rows without Query_type column
+pct_cover_tbl %>% 
+  head(10) %>% 
+  select(-Query_type) %>%
+  knitr::kable(digits=3)
+```
+
+
