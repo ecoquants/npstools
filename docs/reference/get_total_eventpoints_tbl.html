@@ -135,7 +135,51 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_nps_config.html'>get_nps_config</a></span>(<span class='fu'>system.file</span>(<span class='kw'>package</span><span class='kw'>=</span><span class='st'>"npstools"</span>, <span class='st'>"nps_config.yaml"</span>))
-<span class='fu'>get_total_eventpoints_tbl</span>(<span class='no'>cfg</span>, <span class='no'>park</span>)</div><div class='output co'>#&gt; # A tibble: 173 x 8
+<span class='fu'>get_total_eventpoints_tbl</span>(<span class='no'>cfg</span>, <span class='no'>park</span>)</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>cols(</span>
+#&gt; <span class='message'>  Site_ID = col_integer(),</span>
+#&gt; <span class='message'>  GIS_Location_ID = col_character(),</span>
+#&gt; <span class='message'>  Site_Name = col_character(),</span>
+#&gt; <span class='message'>  Site_Desc = col_character(),</span>
+#&gt; <span class='message'>  Unit_Code = col_character(),</span>
+#&gt; <span class='message'>  Site_Notes = col_character()</span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>cols(</span>
+#&gt; <span class='message'>  .default = col_character(),</span>
+#&gt; <span class='message'>  Location_ID = col_integer(),</span>
+#&gt; <span class='message'>  Site_ID = col_integer(),</span>
+#&gt; <span class='message'>  X_Coord = col_double(),</span>
+#&gt; <span class='message'>  Y_Coord = col_double(),</span>
+#&gt; <span class='message'>  UTM_Zone = col_integer(),</span>
+#&gt; <span class='message'>  No_Of_Transect_Points = col_integer(),</span>
+#&gt; <span class='message'>  Slope_degrees = col_integer(),</span>
+#&gt; <span class='message'>  Aspect_bearing = col_integer(),</span>
+#&gt; <span class='message'>  Elevation_m = col_integer()</span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>cols(</span>
+#&gt; <span class='message'>  .default = col_character(),</span>
+#&gt; <span class='message'>  Event_ID = col_integer(),</span>
+#&gt; <span class='message'>  Location_ID = col_integer(),</span>
+#&gt; <span class='message'>  Event_Group_ID = col_integer(),</span>
+#&gt; <span class='message'>  Analysis_code = col_integer(),</span>
+#&gt; <span class='message'>  Is_excluded = col_integer()</span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>cols(</span>
+#&gt; <span class='message'>  Event_Point_ID = col_integer(),</span>
+#&gt; <span class='message'>  Event_ID = col_integer(),</span>
+#&gt; <span class='message'>  Protocol_ID = col_integer(),</span>
+#&gt; <span class='message'>  Length_cm = col_integer(),</span>
+#&gt; <span class='message'>  Point_No = col_integer(),</span>
+#&gt; <span class='message'>  Substrate = col_character(),</span>
+#&gt; <span class='message'>  MaxHeight_cm = col_integer(),</span>
+#&gt; <span class='message'>  MaxHeight_cm_DEAD = col_character(),</span>
+#&gt; <span class='message'>  Transect_Event_Comments = col_character(),</span>
+#&gt; <span class='message'>  Entered_by = col_character(),</span>
+#&gt; <span class='message'>  Entered_date = col_character(),</span>
+#&gt; <span class='message'>  Updated_by = col_character(),</span>
+#&gt; <span class='message'>  Updated_date = col_character(),</span>
+#&gt; <span class='message'>  Import_date = col_character()</span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; # A tibble: 173 x 8
 #&gt; # Groups:   Park, IslandCode, Location_ID, SiteCode, Vegetation_Community,
 #&gt; #   SurveyYear [?]
 #&gt;    Park  IslandCode Location_ID SiteCode Vegetation_Comm… SurveyYear SurveyDate

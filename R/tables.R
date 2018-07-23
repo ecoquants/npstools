@@ -180,6 +180,9 @@ get_spp_park_tbl <- function(cfg, park){
 #' get_total_eventpoints_tbl(cfg, park)
 get_total_eventpoints_tbl <- function(cfg, park){
   # VB: mod_ExportQueries.TotalPointsSQL(iPark As Integer) [L202]
+
+  load_park_tables(cfg, park, c("tbl_Sites", "tbl_Locations", "tbl_Events", "tbl_Event_Point"))
+
   d_ep <- tbl_Sites %>%
     inner_join(
       tbl_Locations %>% select(-Unit_Code), by="Site_ID") %>%
@@ -236,7 +239,7 @@ get_pct_cover_tbl <- function(cfg, park, year){
   # year?
   # VB: mod_ExportQueries.Export_AnnualReport_AbsoluteCover()
 
-  tbl_spp_park <- get_spp_park_tbl(cfg, park) # TODO: CINMS - tbl_Events, tlu_Project_Taxa not found
+  tbl_spp_park <- get_spp_park_tbl(cfg, park) # TODO: CHIS - tbl_Events, tlu_Project_Taxa not found
 
   load_park_tables(
     cfg, park,
