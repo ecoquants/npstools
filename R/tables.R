@@ -24,6 +24,11 @@ get_n_spp_pivtbl <- function(cfg, park, year, xlsx=NULL){
     cfg, park,
     tbls=c("tbl_Phenology_Species", "tlu_Richness", "tbl_Events", "tbl_Locations", "tlu_Project_Taxa", "tlu_Layer"))
 
+  # change to a character field so the left join will work
+  if (park == "CHIS"){
+    tbl_Events$Event_ID <- as.character(tbl_Events$Event_ID)
+  }
+
   d <- tbl_Phenology_Species %>%
     # convert to 5 m plot values
     select(Event_ID, Species_Code, starts_with("Plot")) %>%
