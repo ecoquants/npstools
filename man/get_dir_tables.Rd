@@ -4,10 +4,10 @@
 \alias{get_dir_tables}
 \title{Get directory of tables with CSV's for R}
 \usage{
-get_dir_tables(nps_config)
+get_dir_tables(cfg)
 }
 \arguments{
-\item{nps_config}{NPS configuration list object}
+\item{cfg}{NPS configuration list object; see \code{\link{get_nps_config}}}
 }
 \value{
 path to directory of tables with CSV's for R. Evaluates the machine
@@ -17,6 +17,6 @@ path to directory of tables with CSV's for R. Evaluates the machine
 Get directory of tables with CSV's for R
 }
 \examples{
-nps_config <- read_yaml(here("data/nps_config.yaml"))
-get_dir_tables(nps_config)
+cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+get_dir_tables(cfg)
 }

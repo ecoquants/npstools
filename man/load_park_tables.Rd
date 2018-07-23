@@ -4,10 +4,10 @@
 \alias{load_park_tables}
 \title{Read Park Tables}
 \usage{
-load_park_tables(nps_config, park, tbls = NULL, append_park = F)
+load_park_tables(cfg, park, tbls = NULL, append_park = F)
 }
 \arguments{
-\item{nps_config}{configuration of paths, etc}
+\item{cfg}{NPS configuration list object; see \code{\link{get_nps_config}}}
 
 \item{park}{park code (ie CHIS, CABR or SAMO)}
 
@@ -16,13 +16,13 @@ load_park_tables(nps_config, park, tbls = NULL, append_park = F)
 \item{append_park}{whether to append park code to name (eg tbl_Species_CHIS)}
 }
 \value{
-Does not return anything. Loads all tables listed in the nps_config$dir_tables/park folder into the global namespace.
+Does not return anything. Loads all tables listed in the cfg$dir_tables/park folder into the global namespace.
 }
 \description{
 Read Park Tables
 }
 \examples{
-nps_config <- read_yaml(here("data/nps_config.yaml"))
-load_park_tables(nps_config, "CINMS", tbls=c("tbl_Phenology_Species", "tlu_Richness"))
+cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+load_park_tables(cfg, "CABR", tbls=c("tbl_Phenology_Species", "tlu_Richness"))
 
 }

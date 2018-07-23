@@ -1,5 +1,6 @@
 #' Get pivot table of species richness by park and year
 #'
+#' @param cfg NPS configuration list object; see \code{\link{get_nps_config}}
 #' @param park NPS park abbreviation
 #' @param year year of data to extract
 #' @param xlsx optional Excel spreadsheet path to write out
@@ -9,23 +10,18 @@
 #' @export
 #'
 #' @examples
-#' nps_config <- get_nps_config(here("data/nps_config.yaml"))
-#' park <- "CINMS"
+#' cfg  <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+#' park <- "CABR"
 #' year <- 2015
 #'
-#' # optional path to Excel spreadsheet output
-#' n_spp_xlsx <- here(glue("data/spp_richness_pivot_{park}_{year}.xlsx"))
-#'
-#' n_spp_tbl <- get_n_spp_tbl(park, year, xlsx=n_spp_xlsx)
+#' n_spp_pivtbl <- get_n_spp_pivtbl(cfg, park, year)
 #'
 #' # render pivot table as html widget
-#' n_spp_tbl$renderPivot()
-get_n_spp_pivtbl <- function(park, year, xlsx=NULL){
-
-  stopifnot(exists("nps_config"))
+#' n_spp_pivtbl$renderPivot()
+get_n_spp_pivtbl <- function(cfg, park, year, xlsx=NULL){
 
   load_park_tables(
-    nps_config, park,
+    cfg, park,
     tbls=c("tbl_Phenology_Species", "tlu_Richness", "tbl_Events", "tbl_Locations", "tlu_Project_Taxa", "tlu_Layer"))
 
   d <- tbl_Phenology_Species %>%
@@ -140,17 +136,19 @@ get_n_spp_pivtbl <- function(park, year, xlsx=NULL){
 
 #' Get table of species data for given park
 #'
+#' @param cfg NPS configuration list object; see \code{\link{get_nps_config}}
 #' @param park park abbreviation, eg "CABR", "CHIS" or "SAMO"
 #'
-#' @return tibble
+#' @return tibble with fields: Species_Code, Scientific_name, Layer, FxnGroup,
+#'   Native, Nativity, Perennial, AnnPer
 #' @export
 #'
 #' @examples
-#' nps_config <- get_nps_config(here("data/nps_config.yaml"))
-#' get_spp_park_tbl(park = "CABR")
-get_spp_park_tbl <- function(park){
+#' cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+#' get_spp_park_tbl(cfg, park = "CABR")
+get_spp_park_tbl <- function(cfg, park){
   load_park_tables(
-    nps_config, park,
+    cfg, park,
     tbls=c("tlu_AnnualPerennial", "tlu_Nativity", "tbl_Events", "tlu_Project_Taxa", "tlu_Layer"))
 
   d <- tlu_AnnualPerennial %>%
@@ -171,15 +169,16 @@ get_spp_park_tbl <- function(park){
 
 #' Get table of total event points for given park
 #'
+#' @param cfg NPS configuration list object; see \code{\link{get_nps_config}}
 #' @param park park abbreviation, eg "CABR", "CHIS" or "SAMO"
 #'
-#' @return
+#' @return tibble with fields: Park, IslandCode, Location_ID, SiteCode,
+#'   Vegetation_Community, SurveyYear, SurveyDate, NofPoints
 #' @export
-#' #' nps_config <- get_nps_config(here("data/nps_config.yaml"))
-#' get_total_eventpoints_tbl(park)
-#'
 #' @examples
-get_total_eventpoints_tbl <- function(park){
+#' cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+#' get_total_eventpoints_tbl(cfg, park)
+get_total_eventpoints_tbl <- function(cfg, park){
   # VB: mod_ExportQueries.TotalPointsSQL(iPark As Integer) [L202]
   d_ep <- tbl_Sites %>%
     inner_join(
@@ -210,6 +209,7 @@ get_total_eventpoints_tbl <- function(park){
 
 #' Get table of absolute percent cover for given park and year
 #'
+#' @param cfg NPS configuration list object; see \code{\link{get_nps_config}}
 #' @param park park abbreviation, eg "CABR", "CHIS" or "SAMO"
 #' @param year 4-digit year
 #'
@@ -226,23 +226,27 @@ get_total_eventpoints_tbl <- function(park){
 #'for "Figure E.2. Absolute foliar cover (\%) of plant growth forms, as observed during 20XX monitoring at CABR. Colored bars show mean values, while error bars extend ±1 s.d. from the means." from MEDN_veg_protocol_NARRATIVE_FINAL_8Sep2016.pdf.
 #'
 #' @export
-#'
 #' @examples
-get_pct_cover_tbl <- function(park, year){
+#' cfg  <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+#' park <- "CABR"
+#' year <- 2015
+#'
+#' get_pct_cover_tbl(cfg, park, year)
+get_pct_cover_tbl <- function(cfg, park, year){
   # year?
   # VB: mod_ExportQueries.Export_AnnualReport_AbsoluteCover()
 
-  tbl_spp_park <- get_spp_park_tbl(park) # TODO: CINMS - tbl_Events, tlu_Project_Taxa not found
+  tbl_spp_park <- get_spp_park_tbl(cfg, park) # TODO: CINMS - tbl_Events, tlu_Project_Taxa not found
 
   load_park_tables(
-    nps_config, park,
+    cfg, park,
     tbls=c(
       # inner joins
       "tbl_Sites", "tbl_Locations", "tbl_Events", "tbl_Event_Point",
       # left joins
       "tbl_Species_Data", "tlu_Condition"))
 
-  d_ep <- get_total_eventpoints_tbl(park)
+  d_ep <- get_total_eventpoints_tbl(cfg, park)
 
   # VB: ...strRaw =
   d <- tbl_Sites %>%

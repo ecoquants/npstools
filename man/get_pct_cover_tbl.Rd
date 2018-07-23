@@ -4,9 +4,11 @@
 \alias{get_pct_cover_tbl}
 \title{Get table of absolute percent cover for given park and year}
 \usage{
-get_pct_cover_tbl(park, year)
+get_pct_cover_tbl(cfg, park, year)
 }
 \arguments{
+\item{cfg}{NPS configuration list object; see \code{\link{get_nps_config}}}
+
 \item{park}{park abbreviation, eg "CABR", "CHIS" or "SAMO"}
 
 \item{year}{4-digit year}
@@ -26,4 +28,11 @@ for "Figure E.2. Absolute foliar cover (\%) of plant growth forms, as observed d
 }
 \description{
 Get table of absolute percent cover for given park and year
+}
+\examples{
+cfg  <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+park <- "CABR"
+year <- 2015
+
+get_pct_cover_tbl(cfg, park, year)
 }
