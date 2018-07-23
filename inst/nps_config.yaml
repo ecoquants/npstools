@@ -1,6 +1,6 @@
-dir_Access_tables_csv:
+dir_Access_db:
   default: ~/Google Drive/projects/nps-ecoquants/data/Access_dbs
   Ben-Bests-MBP: ~/Google Drive/projects/nps-ecoquants/data/Access_tables_csv
-dir_R_tables_csv:
+dir_R_csv:
   default: ~/Google Drive/projects/nps-ecoquants/data/R_tables_csv
   Ben-Bests-MBP: ~/Google Drive/projects/nps-ecoquants/data/R_tables_csv

@@ -40,7 +40,7 @@ It is recommended that you setup this file in your home directory `"~/nps_config
 
 ```{r}
 # load libraries
-library(npstools)
+library(npstools) # devtools::load_all()
 library(tidyverse)
 library(here)
 library(glue)

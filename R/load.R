@@ -80,14 +80,14 @@ get_nps_config <- function(nps_config_yaml){
 #' get_dir_tables(cfg)
 get_dir_tables <- function(cfg){
   machine <- Sys.info()[["nodename"]]
-  machine_in_config <- ifelse(machine %in% names(cfg$dir_R_tables_csv), T, F)
-  dir_machine <- ifelse(machine_in_config, cfg$dir_R_tables_csv[[machine]], "")
+  machine_in_config <- ifelse(machine %in% names(cfg$dir_R_csv), T, F)
+  dir_machine <- ifelse(machine_in_config, cfg$dir_R_csv[[machine]], "")
 
   #browser()
   dir_tables <- case_when(
-    #machine_in_config ~ cfg$dir_R_tables_csv[[machine]],
+    #machine_in_config ~ cfg$dir_R_csv[[machine]],
     machine_in_config ~ dir_machine,
-    TRUE ~ cfg$dir_R_tables_csv$default)
+    TRUE ~ cfg$dir_R_csv$default)
 
   dir_tables
 }
