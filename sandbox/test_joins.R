@@ -15,6 +15,6 @@ get_total_eventpoints_tbl(cfg, "CABR") %>% sz()  #  18.2 Kb
 get_total_eventpoints_tbl(cfg, "SAMO") %>% sz()  #  40.5 Kb
 get_total_eventpoints_tbl(cfg, "CHIS") %>% sz()  # 300.6 Kb
 
-
-
+# bigger function now
+d_pct_cover <- get_pct_cover_tbl(cfg, "CHIS", 2015)
 
