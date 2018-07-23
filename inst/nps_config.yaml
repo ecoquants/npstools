@@ -4,3 +4,5 @@ dir_Access_db:
 dir_R_csv:
   default: ~/Google Drive/projects/nps-ecoquants/data/R_tables_csv
   Ben-Bests-MBP: ~/Google Drive/projects/nps-ecoquants/data/R_tables_csv
+  INPCHIS122033: C:/Users/RRudolph/Documents/R Projects/Testing npstools package/R_tables_csv
+
