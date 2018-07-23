@@ -152,6 +152,7 @@ get_n_spp_pivtbl <- function(cfg, park, year, xlsx=NULL){
 #' cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
 #' get_spp_park_tbl(cfg, park = "CABR")
 get_spp_park_tbl <- function(cfg, park){
+
   load_park_tables(
     cfg, park,
     tbls=c("tlu_AnnualPerennial", "tlu_Nativity", "tbl_Events", "tlu_Project_Taxa", "tlu_Layer"))
@@ -183,11 +184,12 @@ get_spp_park_tbl <- function(cfg, park){
 #' @examples
 #' cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
 #' get_total_eventpoints_tbl(cfg, park)
-get_total_eventpoints_tbl <- function(cfg, park){
+get_total_eventpoints_tbl <- function(cfg, park, reload=T){
   # VB: mod_ExportQueries.TotalPointsSQL(iPark As Integer) [L202]
   # park <- "CHIS"
 
-  load_park_tables(cfg, park, c("tbl_Sites", "tbl_Locations", "tbl_Events", "tbl_Event_Point"))
+  if (reload)
+    load_park_tables(cfg, park, c("tbl_Sites", "tbl_Locations", "tbl_Events", "tbl_Event_Point"))
 
   d_ep <- tbl_Sites %>%
     inner_join(
@@ -245,8 +247,6 @@ get_pct_cover_tbl <- function(cfg, park, year){
   # year?
   # VB: mod_ExportQueries.Export_AnnualReport_AbsoluteCover()
 
-  tbl_spp_park <- get_spp_park_tbl(cfg, park) # TODO: CHIS - tbl_Events, tlu_Project_Taxa not found
-
   load_park_tables(
     cfg, park,
     tbls=c(
@@ -255,7 +255,9 @@ get_pct_cover_tbl <- function(cfg, park, year){
       # left joins
       "tbl_Species_Data", "tlu_Condition"))
 
-  d_ep <- get_total_eventpoints_tbl(cfg, park)
+  d_ep <- get_total_eventpoints_tbl(cfg, park, reload = F)
+
+  tbl_spp_park <- get_spp_park_tbl(cfg, park) # TODO: CHIS - tbl_Events, tlu_Project_Taxa not found
 
   # VB: ...strRaw =
   d <- tbl_Sites %>%
