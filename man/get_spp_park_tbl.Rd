@@ -4,18 +4,21 @@
 \alias{get_spp_park_tbl}
 \title{Get table of species data for given park}
 \usage{
-get_spp_park_tbl(park)
+get_spp_park_tbl(cfg, park)
 }
 \arguments{
+\item{cfg}{NPS configuration list object; see \code{\link{get_nps_config}}}
+
 \item{park}{park abbreviation, eg "CABR", "CHIS" or "SAMO"}
 }
 \value{
-tibble
+tibble with fields: Species_Code, Scientific_name, Layer, FxnGroup,
+  Native, Nativity, Perennial, AnnPer
 }
 \description{
 Get table of species data for given park
 }
 \examples{
-nps_config <- get_nps_config(here("data/nps_config.yaml"))
-get_spp_park_tbl(park = "CABR")
+cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+get_spp_park_tbl(cfg, park = "CABR")
 }

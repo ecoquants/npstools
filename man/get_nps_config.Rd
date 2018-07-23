@@ -16,5 +16,5 @@ list object from reading in the NPS configuration file
 Read NPS configuration file
 }
 \examples{
-get_nps_config(here("data/nps_config.yaml"))
+get_nps_config(system.file(package="npstools", "nps_config.yaml"))
 }

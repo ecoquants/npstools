@@ -4,9 +4,11 @@
 \alias{get_n_spp_pivtbl}
 \title{Get pivot table of species richness by park and year}
 \usage{
-get_n_spp_pivtbl(park, year, xlsx = NULL)
+get_n_spp_pivtbl(cfg, park, year, xlsx = NULL)
 }
 \arguments{
+\item{cfg}{NPS configuration list object; see \code{\link{get_nps_config}}}
+
 \item{park}{NPS park abbreviation}
 
 \item{year}{year of data to extract}
@@ -20,15 +22,12 @@ pivottabler::PivotTable R6 object. Render with n_spp_tbl$renderPivot()
 Get pivot table of species richness by park and year
 }
 \examples{
-nps_config <- get_nps_config(here("data/nps_config.yaml"))
-park <- "CINMS"
+cfg  <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+park <- "CABR"
 year <- 2015
 
-# optional path to Excel spreadsheet output
-n_spp_xlsx <- here(glue("data/spp_richness_pivot_{park}_{year}.xlsx"))
-
-n_spp_tbl <- get_n_spp_tbl(park, year, xlsx=n_spp_xlsx)
+n_spp_pivtbl <- get_n_spp_pivtbl(cfg, park, year)
 
 # render pivot table as html widget
-n_spp_tbl$renderPivot()
+n_spp_pivtbl$renderPivot()
 }

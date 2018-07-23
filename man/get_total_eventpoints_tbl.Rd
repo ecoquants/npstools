@@ -4,11 +4,21 @@
 \alias{get_total_eventpoints_tbl}
 \title{Get table of total event points for given park}
 \usage{
-get_total_eventpoints_tbl(park)
+get_total_eventpoints_tbl(cfg, park)
 }
 \arguments{
+\item{cfg}{NPS configuration list object; see \code{\link{get_nps_config}}}
+
 \item{park}{park abbreviation, eg "CABR", "CHIS" or "SAMO"}
+}
+\value{
+tibble with fields: Park, IslandCode, Location_ID, SiteCode,
+  Vegetation_Community, SurveyYear, SurveyDate, NofPoints
 }
 \description{
 Get table of total event points for given park
+}
+\examples{
+cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+get_total_eventpoints_tbl(cfg, park)
 }

@@ -112,24 +112,99 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>get_total_eventpoints_tbl</span>(<span class='no'>park</span>)</pre>
+    <pre class="usage"><span class='fu'>get_total_eventpoints_tbl</span>(<span class='no'>cfg</span>, <span class='no'>park</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>cfg</th>
+      <td><p>NPS configuration list object; see <code><a href='get_nps_config.html'>get_nps_config</a></code></p></td>
+    </tr>
     <tr>
       <th>park</th>
       <td><p>park abbreviation, eg "CABR", "CHIS" or "SAMO"</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>tibble with fields: Park, IslandCode, Location_ID, SiteCode,
+  Vegetation_Community, SurveyYear, SurveyDate, NofPoints</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_nps_config.html'>get_nps_config</a></span>(<span class='fu'>system.file</span>(<span class='kw'>package</span><span class='kw'>=</span><span class='st'>"npstools"</span>, <span class='st'>"nps_config.yaml"</span>))
+<span class='fu'>get_total_eventpoints_tbl</span>(<span class='no'>cfg</span>, <span class='no'>park</span>)</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>cols(</span>
+#&gt; <span class='message'>  Site_ID = col_integer(),</span>
+#&gt; <span class='message'>  GIS_Location_ID = col_character(),</span>
+#&gt; <span class='message'>  Site_Name = col_character(),</span>
+#&gt; <span class='message'>  Site_Desc = col_character(),</span>
+#&gt; <span class='message'>  Unit_Code = col_character(),</span>
+#&gt; <span class='message'>  Site_Notes = col_character()</span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>cols(</span>
+#&gt; <span class='message'>  .default = col_character(),</span>
+#&gt; <span class='message'>  Location_ID = col_integer(),</span>
+#&gt; <span class='message'>  Site_ID = col_integer(),</span>
+#&gt; <span class='message'>  X_Coord = col_double(),</span>
+#&gt; <span class='message'>  Y_Coord = col_double(),</span>
+#&gt; <span class='message'>  UTM_Zone = col_integer(),</span>
+#&gt; <span class='message'>  No_Of_Transect_Points = col_integer(),</span>
+#&gt; <span class='message'>  Slope_degrees = col_integer(),</span>
+#&gt; <span class='message'>  Aspect_bearing = col_integer(),</span>
+#&gt; <span class='message'>  Elevation_m = col_integer()</span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>cols(</span>
+#&gt; <span class='message'>  .default = col_character(),</span>
+#&gt; <span class='message'>  Event_ID = col_integer(),</span>
+#&gt; <span class='message'>  Location_ID = col_integer(),</span>
+#&gt; <span class='message'>  Event_Group_ID = col_integer(),</span>
+#&gt; <span class='message'>  Analysis_code = col_integer(),</span>
+#&gt; <span class='message'>  Is_excluded = col_integer()</span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>cols(</span>
+#&gt; <span class='message'>  Event_Point_ID = col_integer(),</span>
+#&gt; <span class='message'>  Event_ID = col_integer(),</span>
+#&gt; <span class='message'>  Protocol_ID = col_integer(),</span>
+#&gt; <span class='message'>  Length_cm = col_integer(),</span>
+#&gt; <span class='message'>  Point_No = col_integer(),</span>
+#&gt; <span class='message'>  Substrate = col_character(),</span>
+#&gt; <span class='message'>  MaxHeight_cm = col_integer(),</span>
+#&gt; <span class='message'>  MaxHeight_cm_DEAD = col_character(),</span>
+#&gt; <span class='message'>  Transect_Event_Comments = col_character(),</span>
+#&gt; <span class='message'>  Entered_by = col_character(),</span>
+#&gt; <span class='message'>  Entered_date = col_character(),</span>
+#&gt; <span class='message'>  Updated_by = col_character(),</span>
+#&gt; <span class='message'>  Updated_date = col_character(),</span>
+#&gt; <span class='message'>  Import_date = col_character()</span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; # A tibble: 173 x 8
+#&gt; # Groups:   Park, IslandCode, Location_ID, SiteCode, Vegetation_Community,
+#&gt; #   SurveyYear [?]
+#&gt;    Park  IslandCode Location_ID SiteCode Vegetation_Comm… SurveyYear SurveyDate
+#&gt;    &lt;chr&gt; &lt;chr&gt;            &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;                 &lt;int&gt; &lt;chr&gt;     
+#&gt;  1 CABR  CABR       -2141031974 034      Black Sage Scrub       2014 4/9/2014 …
+#&gt;  2 CABR  CABR       -2141031974 034      Black Sage Scrub       2015 4/28/2015…
+#&gt;  3 CABR  CABR       -2084019541 011      California Brit…       2012 5/9/2012 …
+#&gt;  4 CABR  CABR       -2084019541 011      California Brit…       2013 4/26/2013…
+#&gt;  5 CABR  CABR       -2032028138 086      Black Sage Scrub       2017 4/14/2017…
+#&gt;  6 CABR  CABR       -2002950960 076      Chamise Coastal…       2013 4/25/2013…
+#&gt;  7 CABR  CABR       -2002950960 076      Chamise Coastal…       2014 4/8/2014 …
+#&gt;  8 CABR  CABR       -1895349370 038      California Brit…       2015 5/1/2015 …
+#&gt;  9 CABR  CABR       -1895349370 038      California Brit…       2016 4/20/2016…
+#&gt; 10 CABR  CABR       -1780577253 027      Black Sage Scrub       2014 4/10/2014…
+#&gt; # ... with 163 more rows, and 1 more variable: NofPoints &lt;int&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -23,7 +23,7 @@ You only need to run this once, or again to update package.
 ```{r, eval=F}
 library(devtools) # install.packages("devtools")
 
-devtools::install_github("ecoquants/npstools")
+devtools::install_github("ecoquants/npstools") # devtools::install() # for developing R package
 ```
 
 You'll need access to the databaes tables in comma-seperated value (CSV) format. If you don't have access to the shared drive where they're stored internally, you can use this copy:
@@ -45,11 +45,12 @@ library(tidyverse)
 library(here)
 library(glue)
 
-# load configuration
-nps_config <- get_nps_config("~/github/nps-veg/data/nps_config.yaml")
+# load your own configuration, which could be based off package
+nps_config_yaml <- system.file(package="npstools", "nps_config.yaml") 
+cfg <- get_nps_config(nps_config_yaml)
 
 # specify park and year of interest
-park <- "CABR" # "CABR" | "CINMS" | "SABO"
+park <- "CABR" # "CABR" | "CHIS" | "SABO"
 year <- 2015
 ```
 
@@ -64,7 +65,7 @@ Table E.6. Species richness (per transect) observed in 20XX monitoring of [PARK]
 #n_spp_xlsx <- here(glue("data/spp_richness_pivot_{park}_{year}.xlsx"))
 
 # get species richness pivot table
-n_spp_tbl <- get_n_spp_pivtbl(park, year) # , xlsx=n_spp_xlsx)
+n_spp_tbl <- get_n_spp_pivtbl(cfg, park, year) # , xlsx=n_spp_xlsx)
 
 # render pivot table as html widget
 n_spp_tbl$renderPivot()
@@ -80,7 +81,7 @@ Figure E.2. Absolute foliar cover (%) of plant growth forms, as observed during 
 
 ```{r}
 # get percent cover
-pct_cover_tbl <- get_pct_cover_tbl(park, year)
+pct_cover_tbl <- get_pct_cover_tbl(cfg, park, year)
 
 # render interactive table, without Query_type column
 pct_cover_tbl %>% 

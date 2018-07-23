@@ -1,14 +1,14 @@
 #' Read Park Tables
 #'
-#' @param nps_config configuration of paths, etc
+#' @param cfg NPS configuration list object; see \code{\link{get_nps_config}}
 #' @param park park code (ie CHIS, CABR or SAMO)
 #' @param tbls character vector of tables to load (default=NULL, loads all tables)
 #' @param append_park whether to append park code to name (eg tbl_Species_CHIS)
 #'
-#' @return Does not return anything. Loads all tables listed in the nps_config$dir_tables/park folder into the global namespace.
+#' @return Does not return anything. Loads all tables listed in the cfg$dir_tables/park folder into the global namespace.
 #' @importFrom readr read_csv
 #' @importFrom glue glue
-#' @importFrom glue collapse
+#' @importFrom glue glue_collapse
 #' @importFrom tidyr gather
 #' @importFrom stringr str_sub
 #' @importFrom lubridate year
@@ -16,13 +16,13 @@
 #' @export
 #'
 #' @examples
-#' nps_config <- read_yaml(here("data/nps_config.yaml"))
-#' load_park_tables(nps_config, "CINMS", tbls=c("tbl_Phenology_Species", "tlu_Richness"))
+#' cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+#' load_park_tables(cfg, "CABR", tbls=c("tbl_Phenology_Species", "tlu_Richness"))
 #'
-load_park_tables <- function(nps_config, park, tbls=NULL, append_park=F){
+load_park_tables <- function(cfg, park, tbls=NULL, append_park=F){
   #park <- "CABR"; append_park <- F
 
-  dir_tables <- get_dir_tables(nps_config)
+  dir_tables <- get_dir_tables(cfg)
 
   dir_park        <- file.path(dir_tables, park)
   dir_shared      <- file.path(dir_tables, "shared")
@@ -36,7 +36,7 @@ load_park_tables <- function(nps_config, park, tbls=NULL, append_park=F){
   tbls_missing <- setdiff(tbls, c(tbls_park_all, tbls_shared_all))
   #browser()
   if (length(tbls_missing) > 0){
-    msg <- glue("Table(s) not found in {dir_tables}/[{park}|shared]: {collapse(tbls_missing, sep=', ')}")
+    msg <- glue("Table(s) not found in {dir_tables}/[{park}|shared]: {glue_collapse(tbls_missing, sep=', ')}")
     stop(msg)
   }
 
@@ -62,32 +62,32 @@ load_park_tables <- function(nps_config, park, tbls=NULL, append_park=F){
 #' @export
 #'
 #' @examples
-#' get_nps_config(here("data/nps_config.yaml"))
+#' get_nps_config(system.file(package="npstools", "nps_config.yaml"))
 get_nps_config <- function(nps_config_yaml){
   read_yaml(nps_config_yaml)
 }
 
 #' Get directory of tables with CSV's for R
 #'
-#' @param nps_config NPS configuration list object
+#' @param cfg NPS configuration list object; see \code{\link{get_nps_config}}
 #'
 #' @return path to directory of tables with CSV's for R. Evaluates the machine
 #'   name that my be inserted into the NPS configuration file, per: \code{Sys.info()[["nodename"]]}
 #' @export
 #'
 #' @examples
-#' nps_config <- read_yaml(here("data/nps_config.yaml"))
-#' get_dir_tables(nps_config)
-get_dir_tables <- function(nps_config){
+#' cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
+#' get_dir_tables(cfg)
+get_dir_tables <- function(cfg){
   machine <- Sys.info()[["nodename"]]
-  machine_in_config <- ifelse(machine %in% names(nps_config$dir_R_tables_csv), T, F)
-  dir_machine <- ifelse(machine_in_config, nps_config$dir_R_tables_csv[[machine]], "")
+  machine_in_config <- ifelse(machine %in% names(cfg$dir_R_tables_csv), T, F)
+  dir_machine <- ifelse(machine_in_config, cfg$dir_R_tables_csv[[machine]], "")
 
   #browser()
   dir_tables <- case_when(
-    #machine_in_config ~ nps_config$dir_R_tables_csv[[machine]],
+    #machine_in_config ~ cfg$dir_R_tables_csv[[machine]],
     machine_in_config ~ dir_machine,
-    TRUE ~ nps_config$dir_R_tables_csv$default)
+    TRUE ~ cfg$dir_R_tables_csv$default)
 
   dir_tables
 }
