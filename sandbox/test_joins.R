@@ -12,8 +12,8 @@ cfg <- get_nps_config(nps_config_yaml)
 # specify park and year of interest
 sz <- function(o){ format(object.size(o), units = "auto") }
 get_total_eventpoints_tbl(cfg, "CABR") %>% sz()  #  18.2 Kb
-get_total_eventpoints_tbl(cfg, "CHIS") %>% sz()  # 300.6 Kb
 get_total_eventpoints_tbl(cfg, "SAMO") %>% sz()  #  40.5 Kb
+get_total_eventpoints_tbl(cfg, "CHIS") %>% sz()  # 300.6 Kb
 
 
 

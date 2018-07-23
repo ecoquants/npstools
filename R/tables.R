@@ -185,6 +185,7 @@ get_spp_park_tbl <- function(cfg, park){
 #' get_total_eventpoints_tbl(cfg, park)
 get_total_eventpoints_tbl <- function(cfg, park){
   # VB: mod_ExportQueries.TotalPointsSQL(iPark As Integer) [L202]
+  # park <- "CHIS"
 
   load_park_tables(cfg, park, c("tbl_Sites", "tbl_Locations", "tbl_Events", "tbl_Event_Point"))
 
