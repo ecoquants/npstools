@@ -19,13 +19,17 @@ for (park in c("CABR", "SAMO")){
 }
 
 # compare pre and post
-for (park in c("CABR", "SAMO")){ # park == "CABR"
+for (park in c("CABR", "SAMO")){ # park = "CABR" # park = "SAMO"
   pre  <- here(glue("sandbox/pct_cover_{park}-2015_pre-fix.csv")) %>%
     read_csv()
   post <- here(glue("sandbox/pct_cover_{park}-2015_post-fix.csv")) %>%
     read_csv()
   cat(park, "\n")
-  pre == post
+  if (all(dim(pre) == dim(post))){
+    pre == post
+  }{
+    cat(glue("dim (rows x cols) PRE ({glue_collapse(dim(pre), ' x ')}) != POST ({glue_collapse(dim(post), ' x ')})"), "\n")
+  }
 }
 
 # get_spp_park_tbl(cfg, "CABR")
