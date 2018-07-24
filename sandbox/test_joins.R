@@ -1,9 +1,15 @@
 # load libraries
-library(npstools) # devtools::load_all()
+library(npstools)
 library(tidyverse)
 library(here)
 library(glue)
 library(fs)
+library(dplyr)
+library(lubridate)
+
+devtools::load_all()
+
+
 
 # load your own configuration, which could be based off package
 nps_config_yaml <- system.file(package="npstools", "nps_config.yaml")
@@ -19,5 +25,9 @@ get_total_eventpoints_tbl(cfg, "SAMO") %>% sz()  #  40.5 Kb
 get_total_eventpoints_tbl(cfg, "CHIS") %>% sz()  # 300.6 Kb
 
 # bigger function now
-d_pct_cover <- get_pct_cover_tbl(cfg, "CHIS", 2015)
+pct_cover_tbl <- get_pct_cover_tbl(cfg, "CHIS", 2015)
 
+pct_cover_tbl %>%
+  select(-Query_type) %>%
+  DT::datatable() %>%
+  DT::formatRound(columns=c("Average", "StdDev"), digits=3)
