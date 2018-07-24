@@ -191,17 +191,24 @@ get_total_eventpoints_tbl <- function(cfg, park, reload=T){
   if (reload)
     load_park_tables(cfg, park, c("tbl_Sites", "tbl_Locations", "tbl_Events", "tbl_Event_Point"))
 
+  # Filter events by year and make Surveyyear field before joining
+  tbl_Events_filter <- tbl_Events %>%
+    mutate(
+      SurveyYear = lubridate::as_date(
+        Start_Date, tz="America/Los_Angeles", format = "%m/%d/%Y %H:%M:%S")) %>%
+    mutate(SurveyYear = lubridate::year(SurveyYear) %>% as.integer())
+
   d_ep <- tbl_Sites %>%
     inner_join(
       tbl_Locations %>% select(-Unit_Code), by="Site_ID") %>%
     inner_join(
-      tbl_Events %>% select(-Analysis_code), by="Location_ID") %>%
+      tbl_Events_filter %>% select(-Analysis_code), by="Location_ID") %>%
     inner_join(
       tbl_Event_Point, by="Event_ID") %>%
-    mutate(
-      start_date = lubridate::as_date(
-        Start_Date, tz="America/Los_Angeles", format = "%m/%d/%Y %H:%M:%S"),
-      SurveyYear = lubridate::year(start_date) %>% as.integer()) %>%
+    # mutate(
+    #   start_date = lubridate::as_date(
+    #     Start_Date, tz="America/Los_Angeles", format = "%m/%d/%Y %H:%M:%S"),
+    #   SurveyYear = lubridate::year(start_date) %>% as.integer()) %>%
     # VB: ...LocTypeFilter(), HAVING tbl_Sites.Unit_Code = "ParkName(iPark)"
     filter(
       Unit_Code == park,
@@ -247,6 +254,12 @@ get_pct_cover_tbl <- function(cfg, park, year){
   # year?
   # VB: mod_ExportQueries.Export_AnnualReport_AbsoluteCover()
 
+  # For testing:
+  # nps_config_yaml <- system.file(package="npstools", "nps_config.yaml")
+  # cfg <- get_nps_config(nps_config_yaml)
+  # park <- "CHIS"
+  # year <- 2015
+
   load_park_tables(
     cfg, park,
     tbls=c(
@@ -259,12 +272,20 @@ get_pct_cover_tbl <- function(cfg, park, year){
 
   tbl_spp_park <- get_spp_park_tbl(cfg, park) # TODO: CHIS - tbl_Events, tlu_Project_Taxa not found
 
+  # Filter events by year and make Surveyyear field before joining
+  tbl_Events_filter <- tbl_Events %>%
+    mutate(
+      SurveyYear = lubridate::as_date(
+      Start_Date, tz="America/Los_Angeles", format = "%m/%d/%Y %H:%M:%S")) %>%
+    mutate(SurveyYear = lubridate::year(SurveyYear) %>% as.integer()) %>%
+    filter(SurveyYear == year)
+
   # VB: ...strRaw =
   d <- tbl_Sites %>%
     inner_join(
       tbl_Locations %>% select(-Unit_Code), by="Site_ID") %>%
     inner_join(
-      tbl_Events %>% select(-Analysis_code), by="Location_ID") %>%
+      tbl_Events_filter %>% select(-Analysis_code), by="Location_ID") %>%
     inner_join(
       tbl_Event_Point, by="Event_ID") %>%
     left_join(
@@ -279,18 +300,18 @@ get_pct_cover_tbl <- function(cfg, park, year){
       Loc_Type == "I&M",
       Monitoring_Status == "Active") %>%
     # VB: ...strWhere =
-    mutate(
-      start_date = lubridate::as_date(
-        Start_Date, tz="America/Los_Angeles", format = "%m/%d/%Y %H:%M:%S"),
-      SurveyYear = lubridate::year(start_date) %>% as.integer()) %>%
+    # mutate(
+    #   start_date = lubridate::as_date(
+    #     Start_Date, tz="America/Los_Angeles", format = "%m/%d/%Y %H:%M:%S"),
+    #   SurveyYear = lubridate::year(start_date) %>% as.integer()) %>%
     filter(
-      SurveyYear == year,
+      # SurveyYear == year,
       is.null(Analysis_code) || Analysis_code == "Alive") %>%
     select(
       SurveyYear, Park = Unit_Code, IslandCode = Site_Name, SiteCode = Location_Code, Vegetation_Community,
       Species_Code, Condition = Analysis_code, FxnGroup, Nativity)
 
-  # VB: ...strRawSum =
+    # VB: ...strRawSum =
   d_sum <- d %>%
     group_by(SurveyYear, Park, IslandCode, SiteCode, Vegetation_Community, FxnGroup, Nativity) %>%
     summarize(
@@ -301,17 +322,17 @@ get_pct_cover_tbl <- function(cfg, park, year){
     inner_join(
       tbl_Locations %>% select(-Unit_Code), by="Site_ID") %>%
     inner_join(
-      tbl_Events %>% select(-Analysis_code), by="Location_ID")  %>%
+      tbl_Events_filter %>% select(-Analysis_code), by="Location_ID")  %>%
     # VB: ...LocTypeFilter()
     filter(
       Unit_Code == park,
       Loc_Type == "I&M",
       Monitoring_Status == "Active") %>%
     # VB: year
-    mutate(
-      start_date = lubridate::as_date(
-        Start_Date, tz="America/Los_Angeles", format = "%m/%d/%Y %H:%M:%S"),
-      SurveyYear = lubridate::year(start_date) %>% as.integer()) %>%
+    # mutate(
+    #   start_date = lubridate::as_date(
+    #     Start_Date, tz="America/Los_Angeles", format = "%m/%d/%Y %H:%M:%S"),
+    #   SurveyYear = lubridate::year(start_date) %>% as.integer()) %>%
     filter(
       SurveyYear == year) %>%
     # select
@@ -322,7 +343,7 @@ get_pct_cover_tbl <- function(cfg, park, year){
     inner_join(
       tbl_Locations %>% select(-Unit_Code), by="Site_ID") %>%
     inner_join(
-      tbl_Events %>% select(-Analysis_code), by="Location_ID") %>%
+      tbl_Events_filter %>% select(-Analysis_code), by="Location_ID") %>%
     inner_join(
       tbl_Event_Point, by="Event_ID") %>%
     left_join(
@@ -330,21 +351,42 @@ get_pct_cover_tbl <- function(cfg, park, year){
     left_join(
       tlu_Condition, by="Condition") %>%
     left_join(
-      tbl_spp_park, by=c("Species_Code")) %>%
+      tbl_spp_park, by="Species_Code") %>%
+    # table was joining every species code regardless of weather it actually joined by a species code
+    # which means it was multiplying each record by the number of records in the tbl_spp_park table
+    # to fix that, I filtered out everthing that was na with this:
+    filter(!is.na(Species_Code)) %>%
     # VB: ...strWhere =
-    mutate(
-      start_date = lubridate::as_date(
-        Start_Date, tz="America/Los_Angeles", format = "%m/%d/%Y %H:%M:%S")) %>%
+    # mutate(
+      # start_date = lubridate::as_date(
+      #   Start_Date, tz="America/Los_Angeles", format = "%m/%d/%Y %H:%M:%S")) %>%
     filter(
-      lubridate::year(start_date) == year,
+      # lubridate::year(start_date) == year,
       is.null(Analysis_code) || Analysis_code == "Alive")
 
   # VB: ...str0Data =
   q_0data <- q1 %>%
     full_join(q2, by="Vegetation_Community") %>% # TODO: confirm CROSS JOIN by="Vegetation_Community"
     mutate(
-      N = 0) %>%
+      N = 0)
+
+  fieldNames <- names(q_0data)
+  # for (name in fieldNames) {
+  #   print(name)
+  # }
+
+  # If the join made a .y extention, rename it and continue with the select
+  if ("SurveyYear.y" %in% fieldNames){
+    q_0data <- q_0data %>%
+      rename(SurveyYear = SurveyYear.y) %>%
+      select(SurveyYear, Park, IslandCode, SiteCode, Vegetation_Community, FxnGroup, Nativity, N)
+  }else{
+    # otherwise, only  run the select
+    q_0data <- q_0data %>%
     select(SurveyYear, Park, IslandCode, SiteCode, Vegetation_Community, FxnGroup, Nativity, N)
+  }
+
+
 
   # VB: ...strData = strRawSum + str0Data
   q_data <- q_0data %>%
