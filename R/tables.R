@@ -151,11 +151,22 @@ get_n_spp_pivtbl <- function(cfg, park, year, xlsx=NULL){
 #' @examples
 #' cfg <- get_nps_config(system.file(package="npstools", "nps_config.yaml"))
 #' get_spp_park_tbl(cfg, park = "CABR")
-get_spp_park_tbl <- function(cfg, park){
+get_spp_park_tbl <- function(cfg, park, reload=T){
+  # For testing:
+  # devtools::load_all(); library(tidyverse)
+  # nps_config_yaml <- system.file(package="npstools", "nps_config.yaml")
+  # cfg <- get_nps_config(nps_config_yaml)
+  # park <- "CABR"
+  # park <- "CHIS"
+  # year <- 2015
+  # reload=F
 
-  load_park_tables(
-    cfg, park,
-    tbls=c("tlu_AnnualPerennial", "tlu_Nativity", "tbl_Events", "tlu_Project_Taxa", "tlu_Layer"))
+  tbls <- c("tlu_AnnualPerennial", "tlu_Nativity", "tbl_Events", "tlu_Project_Taxa", "tlu_Layer")
+  if (reload){
+    load_park_tables(cfg, park, tbls)
+  } else {
+    load_park_tables(cfg, park, setdiff(tbls, ls()))
+  }
 
   d <- tlu_AnnualPerennial %>%
     inner_join(
@@ -165,7 +176,8 @@ get_spp_park_tbl <- function(cfg, park){
     inner_join(
       tlu_Layer, by=c("Layer"="Layer_code")) %>%
     filter(
-      !is.null(Species_code), # TODO: filter(!is.na(Species_code)) ?
+      !is.null(Species_code),
+      #!is.na(Species_code), # CABR_2015 before: 577, after: 567 # CHIS_2015 before: 1,379, after: 1,103
       Unit_code == park) %>% # Note: because load_park_tables(..., park) should already be limited to park
     select(
       Species_Code=Species_code, Scientific_name, Layer, FxnGroup=Layer_desc, Native, Nativity=Nativity_desc,
@@ -255,8 +267,10 @@ get_pct_cover_tbl <- function(cfg, park, year){
   # VB: mod_ExportQueries.Export_AnnualReport_AbsoluteCover()
 
   # For testing:
+  # devtools::load_all()
   # nps_config_yaml <- system.file(package="npstools", "nps_config.yaml")
   # cfg <- get_nps_config(nps_config_yaml)
+  # park <- "CABR"
   # park <- "CHIS"
   # year <- 2015
 
@@ -268,11 +282,11 @@ get_pct_cover_tbl <- function(cfg, park, year){
       # left joins
       "tbl_Species_Data", "tlu_Condition"))
 
-  d_ep <- get_total_eventpoints_tbl(cfg, park, reload = F)
+  d_ep <- get_total_eventpoints_tbl(cfg, park, reload = T)
 
-  tbl_spp_park <- get_spp_park_tbl(cfg, park) # TODO: CHIS - tbl_Events, tlu_Project_Taxa not found
+  tbl_spp_park <- get_spp_park_tbl(cfg, park, reload = T) # TODO: CHIS - tbl_Events, tlu_Project_Taxa not found
 
-  # Filter events by year and make Surveyyear field before joining
+  # Filter events by year and make Survey year field before joining
   tbl_Events_filter <- tbl_Events %>%
     mutate(
       SurveyYear = lubridate::as_date(
