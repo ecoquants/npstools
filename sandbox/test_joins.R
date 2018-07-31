@@ -27,8 +27,8 @@ for (park in c("CABR", "SAMO")){ # park = "CABR" # park = "SAMO"
   cat(park, "\n")
   if (all(dim(pre) == dim(post))){
     pre == post
-  }{
-    cat(glue("dim (rows x cols) PRE ({glue_collapse(dim(pre), ' x ')}) != POST ({glue_collapse(dim(post), ' x ')})"), "\n")
+  } else {
+    cat(glue("dim (rows x cols) PRE ({paste(dim(pre), collapse=' x ')}) != POST ({paste(dim(post), collapse=' x ')})"), "\n")
   }
 }
 

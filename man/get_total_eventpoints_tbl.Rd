@@ -4,7 +4,7 @@
 \alias{get_total_eventpoints_tbl}
 \title{Get table of total event points for given park}
 \usage{
-get_total_eventpoints_tbl(cfg, park)
+get_total_eventpoints_tbl(cfg, park, reload = T)
 }
 \arguments{
 \item{cfg}{NPS configuration list object; see \code{\link{get_nps_config}}}

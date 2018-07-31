@@ -1,3 +1,24 @@
+#' Return table of objects' memory usage in Mb
+#'
+#' @return tibble
+#' @export
+#'
+#' @examples
+#' om()
+om <- function(){
+  obj_mem <- function(x){
+    #browser()
+    get(x) %>% object.size() / 1024^2 #%>% format(units="Mb")
+  }
+
+  objects = ls(envir = globalenv())
+  tibble(obj = objects) %>%
+    mutate(
+      mem_mb = map_dbl(obj, obj_mem)) %>%
+    arrange(desc(mem_mb))
+}
+
+
 #' Get pivot table of species richness by park and year
 #'
 #' @param cfg NPS configuration list object; see \code{\link{get_nps_config}}
@@ -161,6 +182,7 @@ get_spp_park_tbl <- function(cfg, park, reload=T){
   # year <- 2015
   # reload=F
 
+  # TODO: add attribute to tables to assign year and park, so if different then reload
   tbls <- c("tlu_AnnualPerennial", "tlu_Nativity", "tbl_Events", "tlu_Project_Taxa", "tlu_Layer")
   if (reload){
     load_park_tables(cfg, park, tbls)
@@ -275,9 +297,11 @@ get_pct_cover_tbl <- function(cfg, park, year){
       # left joins
       "tbl_Species_Data", "tlu_Condition"))
 
-  d_ep <- get_total_eventpoints_tbl(cfg, park, reload = F)
+  d_ep <- get_total_eventpoints_tbl(cfg, park, reload = T)
 
-  tbl_spp_park <- get_spp_park_tbl(cfg, park) # TODO: CHIS - tbl_Events, tlu_Project_Taxa not found
+  tbl_spp_park <- get_spp_park_tbl(cfg, park, reload = T) # TODO: CHIS - tbl_Events, tlu_Project_Taxa not found
+  # TODO: deal with situation where is.na(Species_Code) & !is.na(Scientific_name)
+  # sum(is.na(tbl_spp_park$Species_Code))
 
   # VB: ...strRaw =
   d <- tbl_Sites %>%
@@ -291,6 +315,7 @@ get_pct_cover_tbl <- function(cfg, park, year){
       tbl_Species_Data, by="Event_Point_ID") %>%
     left_join(
       tlu_Condition, by="Condition") %>%
+    # CHIS-2015: 86,852 NAs
     left_join(
       tbl_spp_park, by=c("Species_Code")) %>% # TODO: consider to_lower() or fix column names
     # VB: ...LocTypeFilter()
@@ -361,25 +386,26 @@ get_pct_cover_tbl <- function(cfg, park, year){
 
   # VB: ...str0Data =
   q_0data <- q1 %>%
+    # TODO: whoah fix full join here! # CABR-2015 om() # q_0data: 17.2, q2: 2.83, tbl_Species_Data: 2.19, tbl_Event_Point: 1.54
     full_join(q2, by="Vegetation_Community") %>% # TODO: confirm CROSS JOIN by="Vegetation_Community"
     mutate(
       N = 0)
 
-  fieldNames <- names(q_0data)
+  #fieldNames <- names(q_0data)
   # for (name in fieldNames) {
   #   print(name)
   # }
 
   # If the join made a .y extention, rename it and continue with the select
-  if ("SurveyYear.y" %in% fieldNames){
-    q_0data <- q_0data %>%
-      rename(SurveyYear = SurveyYear.y) %>%
-      select(SurveyYear, Park, IslandCode, SiteCode, Vegetation_Community, FxnGroup, Nativity, N)
-  }else{
-    # otherwise, only  run the select
-    q_0data <- q_0data %>%
-    select(SurveyYear, Park, IslandCode, SiteCode, Vegetation_Community, FxnGroup, Nativity, N)
-  }
+  # if ("SurveyYear.y" %in% fieldNames){
+  #   q_0data <- q_0data %>%
+  #     rename(SurveyYear = SurveyYear.y) %>%
+  #     select(SurveyYear, Park, IslandCode, SiteCode, Vegetation_Community, FxnGroup, Nativity, N)
+  # }else{
+  #   # otherwise, only  run the select
+  #   q_0data <- q_0data %>%
+  #   select(SurveyYear, Park, IslandCode, SiteCode, Vegetation_Community, FxnGroup, Nativity, N)
+  # }
 
   # VB: ...strData = strRawSum + str0Data
   q_data <- q_0data %>%
