@@ -1,9 +1,9 @@
 # substitute your own machine name `Sys.info()[["nodename"]]` under default for path
 dir_Access_db:
-  default: ~/Google Drive/projects/nps-ecoquants/data/Access_dbs
-  Ben-Bests-MBP: ~/Google Drive/projects/nps-ecoquants/data/Access_dbs
+  default: "~/Gdrive Ecoquants/nps-ecoquants/data/Access_dbs"
+  Ben-Bests-MBP: "~/Gdrive Ecoquants/projects/nps-ecoquants/data/Access_dbs"
 dir_R_csv:
-  default: ~/Google Drive/projects/nps-ecoquants/data/R_tables_csv
-  Ben-Bests-MBP: ~/Google Drive/projects/nps-ecoquants/data/R_tables_csv
+  default: "~/Gdrive Ecoquants/projects/nps-ecoquants/data/R_tables_csv"
+  Ben-Bests-MBP: "~/Gdrive Ecoquants/projects/nps-ecoquants/data/R_tables_csv"
   INPCHIS122033: "C:/Users/RRudolph/Documents/nps-ecoquants/data/R_tables_csv"
   AMPHITRITE: "Z:/bbest On My Mac/Google Drive/projects/nps-ecoquants/data/R_tables_csv"

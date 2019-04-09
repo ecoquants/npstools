@@ -121,7 +121,6 @@ get_n_spp_pivtbl <- function(cfg, park, year, xlsx=NULL){
         "",
         pivotCalculator$formatValue(v, format=format)))
   }
-
   calc_n_spp_mean <- function(...) { calc_n_spp("mean", ...) }
   calc_n_spp_sd   <- function(...) { calc_n_spp("sd", ...) }
   calc_n_spp_min  <- function(...) { calc_n_spp("min", ...) }
@@ -157,6 +156,8 @@ get_n_spp_pivtbl <- function(cfg, park, year, xlsx=NULL){
   }
 
   #pt$renderPivot()
+
+  attr(pt, "data") <- d
   return(pt)
 }
 

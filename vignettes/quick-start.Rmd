@@ -38,9 +38,12 @@ It is recommended that you setup this file in your home directory `"~/nps_config
 
 ## Setup: Load Libraries & Configuration, Set Park & Year
 
+TODO: Use [rstudio/config](https://github.com/rstudio/config): config package for R.
+
 ```{r}
 # load libraries
-library(npstools) # devtools::load_all()
+#library(npstools)
+devtools::load_all()
 library(tidyverse)
 library(here)
 library(glue)
@@ -100,4 +103,85 @@ pct_cover_tbl %>%
   knitr::kable(digits=3)
 ```
 
+## Plots
 
+### Map of locations, clustered
+
+TODO: 
+
+- limit by criteria? 
+- turn into function
+
+```{r}
+library(tidyverse)
+library(leaflet)
+library(mapview)
+library(glue)
+library(sf)
+
+to_lonlat <- function(x, y, crs_str){
+  st_as_sf(data_frame(x=x, y=y), crs=crs_str, coords = c("x", "y")) %>%
+    st_transform(crs=4326) %>%
+    st_coordinates()
+}
+
+locations <- tbl_Locations %>%
+  mutate(
+    # fix one location
+    Y_Coord   = ifelse(Location_ID == 1502833764, B_Y_Coord, Y_Coord)) %>%
+  # TODO: fix other locations
+  filter(!is.na(X_Coord), !is.na(Y_Coord), !is.na(UTM_Zone)) %>%
+  mutate(
+    crs_str = glue("+proj={tolower(Coord_System)} +zone={UTM_Zone} +datum={Datum} +units={c(meters='m')[Coord_Units]}"),
+    lon_lat = pmap(list(X_Coord, Y_Coord, crs_str), to_lonlat),
+    lon     = map_dbl(lon_lat, ~.[,1]),
+    lat     = map_dbl(lon_lat, ~.[,2])) %>%
+  st_as_sf(coords = c("lon", "lat"), crs=4326)
+
+leaflet(locations) %>%
+  addProviderTiles(providers$Esri.OceanBasemap) %>%
+  addMarkers(
+    clusterOptions = markerClusterOptions(),
+    popup = ~glue(
+      "<b>Location_ID</b>: {Location_ID}<br>
+      <b>Vegetation_Community</b>: {Vegetation_Community}<br>
+      <b>Loc_Notes</b>: {Loc_Notes}"))
+```
+
+### Plot of species richness
+
+```{r}
+#devtools::load_all()
+#n_spp_tbl <- get_n_spp_pivtbl(cfg, park, year) # , xlsx=n_spp_xlsx)
+tbl_nspp <- attr(n_spp_tbl, "data")
+#View(tbl_nspp)
+
+tbl_nspp_sum <- tbl_nspp %>% 
+  group_by(Nativity, Life_Form, Vegetation_Community) %>% 
+  summarize(
+    nspp = n())
+
+#table(tbl_nspp_sum$Nativity)
+#fill=FxnGroup, group=FxnGroup, color=FxnGroup, 
+g <- ggplot(tbl_nspp_sum, aes(x=Vegetation_Community, y=nspp, fill=Life_Form, alpha=Nativity)) + 
+  #facet_wrap(~Vegetation_Community) +
+  geom_bar(stat="identity", position="dodge") + # , colour="black"
+  scale_alpha_manual(values=c(1, 0.6, 0.3)) +
+  labs(x="Vegetation Community", y="# Species") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  #coord_flip()
+
+# TODO: FxnGroup = "All Sites"
+g
+```
+
+## Plot of species richness, dynamic
+
+```{r}
+library(plotly)
+
+ggplotly(g)
+```
+
+
+### Plot of Percent Cover

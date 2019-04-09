@@ -1,0 +1,11 @@
+reference:
+- title: "Read"
+  contents:
+  - starts_with("load_")
+- title: "Analyze"
+  contents:
+  - starts_with("get_")
+- title: "Visualize"
+  contents:
+  - "generate_graphs"
+  - starts_with("plot_")
